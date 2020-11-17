@@ -1,24 +1,35 @@
 package com.bspdev.course.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name = "tb_user") //Renomeia o nome da tabela no BD.
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id //Informa ao banco que esse atributo é a chave primária.
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //Autoincrementa no banco de dados 
 	private Long id;
 	private String name;
 	private String email;
 	private String phone;
 	private String password;
+	
+	@JsonIgnore //Evita um loop de chamadas na requisição. Ao exibir um User, a lista de pedidos não será exibida.
+	@OneToMany(mappedBy = "client") //Um para muitos. Mapeado pelo atributo "client"
+	private List<Order> orders = new ArrayList<>();
 
 	public User() {
 	}
@@ -70,6 +81,10 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Order> getOrders() {
+		return orders;
 	}
 
 	@Override
