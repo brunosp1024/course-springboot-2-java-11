@@ -2,6 +2,8 @@ package com.bspdev.course.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.bspdev.course.entities.enums.OrderStatus;
@@ -30,6 +33,10 @@ public class Order implements Serializable {
 	@ManyToOne //Implementação de muitos para um. Um pedido tem um único cliente, mas um cliente pode ter muitos pedidos.
 	@JoinColumn(name = "client_id") //Renomeia a coluna referente a chave esstrangeira no BD.
 	private User client;
+	
+	@OneToMany(mappedBy = "id.order")
+	private Set<OrderItem> items = new HashSet<>();
+
 
 	public Order() {
 	}
@@ -74,6 +81,10 @@ public class Order implements Serializable {
 
 	public void setClient(User client) {
 		this.client = client;
+	}
+	
+	public Set<OrderItem> getItems() {
+		return items;
 	}
 
 	@Override
