@@ -12,7 +12,7 @@ import com.bspdev.course.repositories.UserRepository;
 @Service
 public class UserService {
 
-	@Autowired
+	@Autowired //Automatiza a injeção de dependência entre esta e a classe repository.
 	private UserRepository repository;
 
 	public List<User> findAll() {
@@ -22,5 +22,9 @@ public class UserService {
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
 		return obj.get();
+	}
+	
+	public User insert(User obj) {
+		return repository.save(obj); //Por padrão o método .save(obj) retorna o obj.
 	}
 }

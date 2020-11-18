@@ -1,16 +1,21 @@
 package com.bspdev.course.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bspdev.course.entities.User;
 import com.bspdev.course.services.UserService;
+
 
 @RestController
 @RequestMapping(value = "/users")
@@ -30,5 +35,14 @@ public class UserResource {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 
+	}
+	
+	@PostMapping //Para salvar dados no BD atraves da web
+	public ResponseEntity<User> insert(@RequestBody User obj) { //Annotation @RequestBody permite desserializar de Json pra o tipo do obj.
+		obj = service.insert(obj);
+		//Pega o obj e transforma em URI pra inserção em http.
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).body(obj);
 	}
 }
